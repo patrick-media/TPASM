@@ -51,6 +51,17 @@ SR | (S)tatus (R)egister
 #define JLE 4
 #define JZ  5
 
+typedef struct {
+    int value;
+} Reg_t;
+typedef struct {
+    int entries[ 127 ];
+} Stack_t;
+typedef struct {
+    int val_in;
+    int val_out;
+} Port_t;
+
 // NOP
 bool ASM_NOP( void );
 // MVR
@@ -95,10 +106,6 @@ bool ASM_CMP( GLOBAL ONE, GLOBAL TWO, int CONDITION );
 // JNZ
 bool ASM_JNZ( std::string LABEL );
 
-typedef struct {
-    int value;
-} Reg_t;
-
 Reg_t* REG_X  = { 0 };
 Reg_t* REG_Y  = { 0 };
 Reg_t* REG_Z  = { 0 };
@@ -108,16 +115,7 @@ Reg_t* REG_C  = { 0 };
 Reg_t* REG_R  = { 0 };
 Reg_t* REG_SR = { 0 };
 
-typedef struct {
-    int entries[ 127 ];
-} Stack_t;
-
 Stack_t* STACK = { 0 };
-
-typedef struct {
-    int val_in;
-    int val_out;
-} Port_t;
 
 Port_t* PORTS[ 20 ] = { 0 };
 
@@ -206,13 +204,13 @@ bool ASM_NOR( GLOBAL ONE, GLOBAL TWO ) {
 // IN
 template< typename GLOBAL >
 bool ASM_IN( GLOBAL INTO, int PORT ) {
-    INTO = PORTS[ PORT ]->in_val;
+    INTO = PORTS[ PORT ]->val_in;
     return true;
 }
 // OUT
 template< typename GLOBAL >
 bool ASM_OUT( int PORT, GLOBAL FROM ) {
-    PORTS[ PORT ]->out_val = FROM;
+    PORTS[ PORT ]->val_out = FROM;
     return true;
 }
 // CMP - TODO implement
